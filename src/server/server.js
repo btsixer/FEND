@@ -29,6 +29,7 @@ const fetch = require('node-fetch');
 
 // *****************
 // /* Middleware */
+// *****************
 // // Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -41,13 +42,29 @@ app.use(express.static('dist'));
 
 // *****************
 // /* Server */
-// Simple /GET to review server functionality
+// *****************
+// Simple /GET to review server functionality when setting up the project initially
 // app.get("/", (req, res)=> {
 //     res.send("Hello World!")
 // })
 
+// *****************
+// /* Global */
+// *****************
 // Setup empty JS object to act as endpoint for all routes
 projectData = {};
+
+// getData function
+const getData = async (url) => {
+    const response = await fetch(url);
+    try {
+      const data = await response.json();
+      // console.log(data);
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
 // Function to complete GET /all for user input on travel details
 app.get('/all', (req, res) => {
@@ -61,35 +78,72 @@ app.post('/all', (req, res) => {
     console.log(projectData);
 });
 
-// //.env credentials
-// let geoNamesUser = process.env.API_ID;
-// let weatherApiKey = process.env.API_KEY;
-
 // // Add a GET route that returns the geoNames location data into lat / long variables for the next API
-app.get('/geoNames', (req, res) => {
-    console.log('GET geonames is working!');
-    // **************** Using query parameters on the client.js file will pass the data to the server through "req.query" as below
-    // **************** console.log("Req: ", req.query)
-    // **************** Now, entries from the req.query parameters will be callable in the url as below, 
-    // **************** const url = `http://api.geonames.org/searchJSON?q=${req.query.cityName}&maxRows=1&username=${process.env.GEONAMES_API_ID}`
-    const url = `http://api.geonames.org/searchJSON?q=${req.query.placename}&maxRows=1&username=${process.env.GEONAMES_API_ID}`
+// // Following code works as a /GET to the geonames endpoint
+// app.get('/geoNames', (req, res) => {
+//     console.log('GET geonames is working!');
+//     // **************** Using query parameters on the client.js file will pass the data to the server through "req.query" as below
+//     // **************** console.log("Req: ", req.query)
+//     // **************** Now, entries from the req.query parameters will be callable in the url as below, 
+//     // **************** const url = `http://api.geonames.org/searchJSON?q=${req.query.placename}&maxRows=1&username=${process.env.GEONAMES_API_ID}`
+//     console.log("Req: ", req.query);
+//     const url = `http://api.geonames.org/searchJSON?q=${req.query.placename}&maxRows=1&username=${process.env.GEONAMES_API_ID}`;
+//     console.log(url);
+//     getData(url).then(response => {
+//         console.log('Data from Genames[0]')
+//         console.log(response.geonames[0]);
+//         projectData.lat = response.geonames[0].lat;
+//         projectData.long = response.geonames[0].lng;
+
+//         console.log('projectData is: ', projectData);
+//         res.send(true);
+//     }).catch(error => {
+//         res.send(JSON.stringify({error: error}))
+//     });
+// });
+
+app.post('/geoNames', (req, res) => {
+    console.log('\n*************** GEONAMES START ***************');
+    console.log("GeoNames request: ", req.body);
+    const url = `http://api.geonames.org/searchJSON?q=${req.body.placenameCity.toUpperCase()}&adminCode1=${req.body.placenameState.toUpperCase()}&maxRows=1&username=${process.env.GEONAMES_API_ID}`;
     console.log(url);
     getData(url).then(response => {
-        console.log('Data from Genames[0]')
-        console.log(response.geonames[0]);
+        console.log('Data from geoNames[0]')
+        // console.log(response.geonames[0]);
         projectData.lat = response.geonames[0].lat;
         projectData.long = response.geonames[0].lng;
-
-        console.log('projectData is: ', projectData);
-        res.send(true);
+        console.log(`The lat / long of ${req.body.placenameCity.toUpperCase()}, ${req.body.placenameState.toUpperCase()} is : ${projectData.lat} / ${projectData.long}.`)
+        res.send(projectData);
+        console.log('*************** GEONAMES FINISH ***************\n');
     }).catch(error => {
         res.send(JSON.stringify({error: error}))
     });
 });
 
-
-
-
+app.post('/weatherBit', (req, res) => {
+    console.log('\n*************** WEATHERBIT START ***************');
+    console.log('WeatherBit request: ', req.body);
+    const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${req.body.lat}&lon=${req.body.long}&key=${process.env.WEATHERBIT_API_KEY}`;
+    console.log(url);
+    getData(url).then(response => {
+        console.log('Data from weatherBit[0]');
+        projectData.weatherData = response.data[1].temp;
+        console.log(projectData.weatherData);
+        // weatherDataDeparture = response.data[2];
+        // console.log(`If your travel is within 16 days from today, your departure date high temperature is: ${weatherDataDeparture}`);
+        // weatherData.forEach((data) => {
+        //   if (data.valid_date == projectData.startDate) {
+        //     projectData.description = data.weather.description;
+        //     projectData.temp = data.temp;
+        //     console.log(projectData);
+        //     res.send(true);
+        //   } else return
+        // })
+        console.log('*************** WEATHERBIT FINISH ***************\n');
+    }).catch(error => {
+        res.send(JSON.stringify({error: error}))
+    });
+})
 
 
 
@@ -210,14 +264,3 @@ app.post('/createTrip', (req, res) => {
 //   console.log(projectData);
 // });
 
-// // Global functions
-// const getData = async (url) => {
-//   const response = await fetch(url);
-//   try {
-//     const data = await response.json();
-//     // console.log(data);
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };

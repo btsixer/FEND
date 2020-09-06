@@ -1,11 +1,22 @@
 function init() {
     console.log('Initializing.. begin gathering trip details.');
+}
+
+const getData = async (url) => {
+  const response = await fetch(url);
+  try {
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("error", error);
   }
+};
   
 const postData = async ( url='', data={})=>{
       const response = await fetch(url, {
           method: 'POST',
-          credentials: 'same-origin',
+          // credentials: 'same-origin',
           headers: {
               'Content-Type': 'application/json',
           },
@@ -19,18 +30,6 @@ const postData = async ( url='', data={})=>{
         } catch (error) {
           console.log("error", error);
         };
-};
-  
-// export const getData = async (url) => {
-const getData = async (url) => {
-    const response = await fetch(url);
-    try {
-      const data = await response.json();
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log("error", error);
-    }
 };
   
 // const updateUI = async (url) => {
@@ -56,34 +55,42 @@ const getData = async (url) => {
   const travelCard = document.getElementById('input-submit');
   // const travelResults = document.getElementById('travel-results');
   
-  // export async function handleSubmi t(event) {
+  // Async function to manage user input and store client side variables
   async function handleSubmit(event) {
     // Set submit data into key variables
-    const destination = document.getElementById('input-destination').value;
+    const city = document.getElementById('input-destination-city').value;
+    const state = document.getElementById('input-destination-state').value;
     const departureDate = document.getElementById('input-date').value;
     const returnDate = document.getElementById('input-return-date').value;
     // Create a new date instance dynamically with javascript
     const currentDate = new Date();
     const newDate = currentDate.getMonth() + "-" + currentDate.getDate() + "-" + currentDate.getFullYear();
-    console.log(`newDate: ${newDate}`)
+    console.log(`newDate: ${newDate}`);
     // Calculate the travel duration
     const startDate = new Date(departureDate);
     const endDate = new Date(returnDate);
     const tripDuration = endDate.getTime() - startDate.getTime();
     const daysInTravel = tripDuration / (1000 * 60 * 60 * 24);
     // Console log all values for reference
-    console.log(`destination: ${destination}`);
+    console.log(`city: ${city}`);
+    console.log(`state: ${state}`);
     console.log(`departureDate:  ${departureDate}`);
     console.log(`returnDate:  ${returnDate}`);
     console.log(`daysInTravel: ${daysInTravel}`);
     console.log(`Form Submitted! Time stamp: ${event.timeStamp}`);
-    // Let the functions run async and wait until completion
-    // await getData('http://localhost:3030/geoNames');
-    await getData(`http://localhost:3030/geoNames/?placename=${destination}`)
-    // await getData('http://localhost:3030/weatherBit');
+    // Pass key variables into the chained promises, display to console to validate client side can read the variables.
+    let placenameData = {
+      placenameCity: city,
+      placenameState: state
+    };
+    const coord = await postData('http://localhost:3030/geoNames', placenameData);
+    console.log(`The lat / long coordinates for ${city.toUpperCase()}, ${state.toUpperCase()} are:  ${coord.lat} / ${coord.long}`);
+
+    const fcst = await postData('http://localhost:3030/weatherBit', coord);
+    console.log(fcst.temp);
     // await getData('http://localhost:3030/pixabay');
     // await updateUI('http://localhost:3030/all');
-  }
+  };
   
   travelCard.addEventListener('click', handleSubmit);
   

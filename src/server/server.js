@@ -129,6 +129,7 @@ app.post('/weatherBit', (req, res) => {
         console.log('Data from weatherBit[0]');
         projectData.weatherData = response.data[1].temp;
         console.log(projectData.weatherData);
+        res.send(projectData);
         // weatherDataDeparture = response.data[2];
         // console.log(`If your travel is within 16 days from today, your departure date high temperature is: ${weatherDataDeparture}`);
         // weatherData.forEach((data) => {
@@ -145,7 +146,21 @@ app.post('/weatherBit', (req, res) => {
     });
 })
 
-
+app.post('/pixabay', (req, res) => {
+    console.log('\n*************** PIXABAY START ***************');
+    console.log('POST pixabay');
+    const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_API_KEY}&q=${req.body.placenameCity.toUpperCase()}&image_type=photo`
+    console.log(url);
+    getData(url).then(response => {
+        console.log("Data from pixabay[0]");
+        projectData.img = response.hits[0].webformatURL;
+        // console.log(projectData);
+        res.send(projectData);
+        console.log('*************** PIXABAY FINISH ***************\n');
+    }).catch(error => {
+        res.send(JSON.stringify({error: error}))
+    });
+})
 
 
 

@@ -87,8 +87,10 @@ const postData = async ( url='', data={})=>{
     console.log(`The lat / long coordinates for ${city.toUpperCase()}, ${state.toUpperCase()} are:  ${coord.lat} / ${coord.long}`);
 
     const fcst = await postData('http://localhost:3030/weatherBit', coord);
-    console.log(fcst.temp);
-    // await getData('http://localhost:3030/pixabay');
+    console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} on that date is: ${fcst.weatherData}`);
+
+    const picture = await postData('http://localhost:3030/pixabay', placenameData);
+    console.log(`Pixabay image is ${picture.img}.`);
     // await updateUI('http://localhost:3030/all');
   };
   

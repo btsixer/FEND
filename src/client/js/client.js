@@ -32,24 +32,24 @@ const postData = async ( url='', data={})=>{
         };
 };
   
-// const updateUI = async (url) => {
-//     console.log('UpdateUI function starting');
-//     const response = await fetch(url);
-//     try {
-//       const data = await response.json();
-//       // document.getElementById("results-image").src = data.img;
-//       // document.getElementById("result-destination").innerHTML = `Trip to: ${data.location}`
-//       // document.getElementById("result-departure").innerHTML = `Departure: ${data.startDate}`
-//       // document.getElementById("result-return").innerHTML = `Return: ${data.endDate}`
-//       // document.getElementById("result-duration").innerHTML = `Duration: ${data.duration} days`
-//       // document.getElementById("trip-start").innerHTML = `Your trip is ${data.timeTillTravel} days from now`
-//       // document.getElementById("result-temp").innerHTML = `${data.temp}°F`
-//       // document.getElementById("result-description").innerHTML = `${data.description}`
-//       document.getElementById('allData').innerHTML = 'Hello, your trip details are below. /n `Trip to: ${data.location}`'
-//     } catch (error) {
-//       console.log("error", error);
-//     }
-// };
+const updateUI = async (url) => {
+    console.log('UpdateUI function starting');
+    const response = await fetch(url);
+    try {
+      const data = await response.json();
+      // document.getElementById("results-image").src = data.img;
+      // document.getElementById("result-destination").innerHTML = `Trip to: ${data.location}`
+      // document.getElementById("result-departure").innerHTML = `Departure: ${data.startDate}`
+      // document.getElementById("result-return").innerHTML = `Return: ${data.endDate}`
+      // document.getElementById("result-duration").innerHTML = `Duration: ${data.duration} days`
+      // document.getElementById("trip-start").innerHTML = `Your trip is ${data.timeTillTravel} days from now`
+      // document.getElementById("result-temp").innerHTML = `${data.temp}°F`
+      // document.getElementById("result-description").innerHTML = `${data.description}`
+      document.getElementById('allData').innerHTML = `Hello, your trip details are below. \n You would like to travel to: ${city.toUpperCase()}, ${state.toUpperCase()}`;
+    } catch (error) {
+      console.log("error", error);
+    }
+};
   
   /* Global Variables */
   const travelCard = document.getElementById('input-submit');
@@ -92,8 +92,9 @@ const postData = async ( url='', data={})=>{
     console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.maxTempF} F`);
 
     const picture = await postData('http://localhost:3030/pixabay', placenameData);
-    console.log(`Pixabay image is ${picture.img}.`);
-    // await updateUI('http://localhost:3030/all');
+    console.log(`Pixabay image is ${picture.pixabayImage}.`);
+
+    await updateUI('http://localhost:3030/all');
   };
   
   travelCard.addEventListener('click', handleSubmit);

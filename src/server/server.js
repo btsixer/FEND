@@ -196,9 +196,10 @@ app.post('/pixabay', (req, res) => {
     console.log(url);
     getData(url).then(response => {
         console.log("Data from pixabay[0]");
-        projectData.img = response.hits[0].webformatURL;
-        // console.log(projectData);
-        res.send(projectData);
+        // projectData.img = response.hits[0].webformatURL;
+        console.log(response.hits[0].webformatURL);
+        // pixabayImage = response.hits[0].webformatURL;
+        res.send({pixabayImage: response.hits[0].webformatURL});
         console.log('*************** PIXABAY FINISH ***************\n');
     }).catch(error => {
         res.send(JSON.stringify({error: error}))
@@ -235,12 +236,6 @@ app.post('/createTrip', (req, res) => {
   res.send('ok');
 });
 
-// // Shubham test for understanding - Add a POST route to send form data into /geoNames endpoint
-// // app.post('/geoNames2', (req, res) => {
-// //   console.log('POST geonames');
-// //   // const location = req.body.location;
-// //   console.log(`Location is: ${req.body.location}`);
-// // });
 
 // // Add a GET route that returns the geoNames location data into lat / long variables for the next API
 // app.get('/geoNames', (req, res) => {
@@ -259,32 +254,6 @@ app.post('/createTrip', (req, res) => {
 //     res.send(JSON.stringify({error: error}))
 //   });
 // });
-
-// // Testing based on help from Shubham
-// // import org.testng.Assert;
-// // import org.testng.annotations.Test;
-// // import io.restassured.RestAssured;
-// // import io.restassured.response.Response;
-// // import io.restassured.specification.RequestSpecification;
-// //
-// // public class QUERYPARAMETERRequest {
-// //
-// //   @Test
-// //         public void queryParameter() {
-// //
-// //     RestAssured.baseURI ="http://api.geonames.org/searchJSON";
-// //     RequestSpecification request = RestAssured.given();
-// //
-// //     Response response = request.queryParam("placename", "hollister")
-// //                            .queryParam(`${process.env.GEONAMES_API_ID}`)
-// //                            .get("/geoNames");
-// //
-// //     String jsonString = response.asString();
-// //     System.out.println(response.getStatusCode());
-// //     Assert.assertEquals(jsonString.contains("hollister"), true);
-// //
-// //   }
-// // }
 
 // app.get('/weatherBit', (req, res) => {
 //   console.log('GET weatherBit');

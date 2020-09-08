@@ -84,10 +84,12 @@ const postData = async ( url='', data={})=>{
       placenameState: state
     };
     const coord = await postData('http://localhost:3030/geoNames', placenameData);
-    console.log(`The lat / long coordinates for ${city.toUpperCase()}, ${state.toUpperCase()} are:  ${coord.lat} / ${coord.long}`);
+    console.log(`The latitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.lat}.`);
+    console.log(`The longitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.long}.`);
 
     const fcst = await postData('http://localhost:3030/weatherBit', coord);
-    console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} on that date is: ${fcst.weatherData}`);
+    console.log(`The forecast low temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.minTempF} F`);
+    console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.maxTempF} F`);
 
     const picture = await postData('http://localhost:3030/pixabay', placenameData);
     console.log(`Pixabay image is ${picture.img}.`);

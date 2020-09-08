@@ -102,6 +102,24 @@ app.post('/all', (req, res) => {
 //     });
 // });
 
+// app.post('/geoNames', (req, res) => {
+//     console.log('\n*************** GEONAMES START ***************');
+//     console.log("GeoNames request: ", req.body);
+//     const url = `http://api.geonames.org/searchJSON?q=${req.body.placenameCity.toUpperCase()}&adminCode1=${req.body.placenameState.toUpperCase()}&maxRows=1&username=${process.env.GEONAMES_API_ID}`;
+//     console.log(url);
+//     getData(url).then(response => {
+//         console.log('Data from geoNames[0]')
+//         // console.log(response.geonames[0]);
+//         projectData.lat = response.geonames[0].lat;
+//         projectData.long = response.geonames[0].lng;
+//         console.log(`The lat / long of ${req.body.placenameCity.toUpperCase()}, ${req.body.placenameState.toUpperCase()} is : ${projectData.lat} / ${projectData.long}.`)
+//         res.send(projectData);
+//         console.log('*************** GEONAMES FINISH ***************\n');
+//     }).catch(error => {
+//         res.send(JSON.stringify({error: error}))
+//     });
+// });
+
 app.post('/geoNames', (req, res) => {
     console.log('\n*************** GEONAMES START ***************');
     console.log("GeoNames request: ", req.body);
@@ -109,16 +127,41 @@ app.post('/geoNames', (req, res) => {
     console.log(url);
     getData(url).then(response => {
         console.log('Data from geoNames[0]')
-        // console.log(response.geonames[0]);
-        projectData.lat = response.geonames[0].lat;
-        projectData.long = response.geonames[0].lng;
-        console.log(`The lat / long of ${req.body.placenameCity.toUpperCase()}, ${req.body.placenameState.toUpperCase()} is : ${projectData.lat} / ${projectData.long}.`)
-        res.send(projectData);
+        // Sending coordinates value back to client instead of updating the projectData object
+        console.log(response.geonames[0].lat);
+        console.log(response.geonames[0].lng);
+        res.send({lat:response.geonames[0].lat, long:response.geonames[0].lng});
         console.log('*************** GEONAMES FINISH ***************\n');
     }).catch(error => {
         res.send(JSON.stringify({error: error}))
     });
 });
+
+// app.post('/weatherBit', (req, res) => {
+//     console.log('\n*************** WEATHERBIT START ***************');
+//     console.log('WeatherBit request: ', req.body);
+//     const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${req.body.lat}&lon=${req.body.long}&key=${process.env.WEATHERBIT_API_KEY}`;
+//     console.log(url);
+//     getData(url).then(response => {
+//         console.log('Data from weatherBit[0]');
+//         projectData.weatherData = response.data[1].temp;
+//         console.log(projectData.weatherData);
+//         res.send(projectData);
+//         // weatherDataDeparture = response.data[2];
+//         // console.log(`If your travel is within 16 days from today, your departure date high temperature is: ${weatherDataDeparture}`);
+//         // weatherData.forEach((data) => {
+//         //   if (data.valid_date == projectData.startDate) {
+//         //     projectData.description = data.weather.description;
+//         //     projectData.temp = data.temp;
+//         //     console.log(projectData);
+//         //     res.send(true);
+//         //   } else return
+//         // })
+//         console.log('*************** WEATHERBIT FINISH ***************\n');
+//     }).catch(error => {
+//         res.send(JSON.stringify({error: error}))
+//     });
+// })
 
 app.post('/weatherBit', (req, res) => {
     console.log('\n*************** WEATHERBIT START ***************');
@@ -127,24 +170,24 @@ app.post('/weatherBit', (req, res) => {
     console.log(url);
     getData(url).then(response => {
         console.log('Data from weatherBit[0]');
-        projectData.weatherData = response.data[1].temp;
-        console.log(projectData.weatherData);
-        res.send(projectData);
-        // weatherDataDeparture = response.data[2];
-        // console.log(`If your travel is within 16 days from today, your departure date high temperature is: ${weatherDataDeparture}`);
-        // weatherData.forEach((data) => {
-        //   if (data.valid_date == projectData.startDate) {
-        //     projectData.description = data.weather.description;
-        //     projectData.temp = data.temp;
-        //     console.log(projectData);
-        //     res.send(true);
-        //   } else return
-        // })
+        // Convert string to integer and calculate Fahrenheit temperature
+        let minTempC = Number(response.data[0].min_temp);
+        let minTempF = ((minTempC*9/5)+32);
+        let maxTempC = Number(response.data[0].max_temp);
+        let maxTempF = ((maxTempC*9/5)+32);
+        minTemp = response.data[0].min_temp;
+        maxTemp = response.data[0].max_temp;
+        console.log(minTemp);
+        console.log(maxTemp);
+        console.log(minTempF + 'F');
+        console.log(maxTempF + 'F');
+        // Sending coordinates value back to client instead of updating the projectData object
+        res.send({minTempF, maxTempF});
         console.log('*************** WEATHERBIT FINISH ***************\n');
     }).catch(error => {
         res.send(JSON.stringify({error: error}))
     });
-})
+});
 
 app.post('/pixabay', (req, res) => {
     console.log('\n*************** PIXABAY START ***************');

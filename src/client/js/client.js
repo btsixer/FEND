@@ -99,10 +99,6 @@ const updateUI = async (url) => {
   
   travelCard.addEventListener('click', handleSubmit);
   
-  // await Client.getData('http://localhost:3030/geoNames')
-  // await Client.getData('http://localhost:3030/weatherBit')
-  // await Client.getData('http://localhost:3030/pixabay')
-  // await Client.updateUI('http://localhost:3030/all')
   // travelCard.style.display = 'none';
   
   export {

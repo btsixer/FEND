@@ -73,10 +73,10 @@ app.get('/all', (req, res) => {
 });
 
 // Function to complete POST /all for user input on travel details
-app.post('/all', (req, res) => {
-    res.send(projectData);
-    console.log(projectData);
-});
+// app.post('/all', (req, res) => {
+//     res.send(projectData);
+//     console.log(projectData);
+// });
 
 // // Add a GET route that returns the geoNames location data into lat / long variables for the next API
 // // Following code works as a /GET to the geonames endpoint
@@ -191,7 +191,6 @@ app.post('/weatherBit', (req, res) => {
 
 app.post('/pixabay', (req, res) => {
     console.log('\n*************** PIXABAY START ***************');
-    console.log('POST pixabay');
     const url = `https://pixabay.com/api/?key=${process.env.PIXABAY_API_KEY}&q=${req.body.placenameCity.toUpperCase()}&image_type=photo`
     console.log(url);
     getData(url).then(response => {
@@ -206,7 +205,19 @@ app.post('/pixabay', (req, res) => {
     });
 })
 
-
+app.post('/all', (req, res) => {
+    console.log('\n*************** UPDATEUI START ***************');
+    const url = `http://api.geonames.org/searchJSON?q=${req.body.placenameCity.toUpperCase()}&adminCode1=${req.body.placenameState.toUpperCase()}&maxRows=1&username=${process.env.GEONAMES_API_ID}`;
+    const url2 = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${req.body.lat}&lon=${req.body.long}&key=${process.env.WEATHERBIT_API_KEY}`;
+    const url3 = `https://pixabay.com/api/?key=${process.env.PIXABAY_API_KEY}&q=${req.body.placenameCity.toUpperCase()}&image_type=photo`
+    console.log(url);
+    getData(url).then(response => {
+        res.send({lat:response.geonames[0].lat, long:response.geonames[0].lng});
+        console.log('*************** UPDATEUI FINISH ***************\n');
+    }).catch(error => {
+        res.send(JSON.stringify({error: error}))
+    });
+})
 
 
 

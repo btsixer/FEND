@@ -31,23 +31,17 @@ const postData = async ( url='', data={})=>{
           console.log("error", error);
         };
 };
-
-// const city = document.getElementById('input-destination-city').value;
-// const state = document.getElementById('input-destination-state').value;
-// const cityState {
-//   var city = document.getElementById('input-destination-city').value;
-//   var state = document.getElementById('input-destination-state').value
-// }
   
-const updateUI = async (url) => {
+const updateUI = async (url, projectData) => {
     console.log('UpdateUI function starting');
-    // const city = document.getElementById('input-destination-city').value;
-    // const state = document.getElementById('input-destination-state').value
+    const city = document.getElementById('input-destination-city').value;
+    const state = document.getElementById('input-destination-state').value
     const response = await fetch(url);
     try {
       const data = await response.json();
       // document.getElementById("results-image").src = data.img;
-      document.getElementById('allData').innerHTML = `The latitude is:  ${coord.lat}.`;
+      document.getElementById('allData').innerHTML = `The latitude is:  ${data.lat}.`;
+      document.getElementById('allData').innerHTML = `The latitude is:  ${data.long}.`;
       // document.getElementById("result-departure").innerHTML = `Departure: ${data.startDate}`
       // document.getElementById("result-return").innerHTML = `Return: ${data.endDate}`
       // document.getElementById("result-duration").innerHTML = `Duration: ${data.duration} days`
@@ -103,13 +97,7 @@ const updateUI = async (url) => {
     const picture = await postData('http://localhost:3030/pixabay', placenameData);
     // console.log(`Pixabay image is ${picture.pixabayImage}.`);
 
-    // await updateUI('http://localhost:3030/all', city, state);
-    const allData = await updateUI('http://localhost:3030/all', placenameData, coord);
-    console.log('Here is all of the data:')
-    console.log(`The latitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.lat}.`);
-    console.log(`The longitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.long}.`);
-    console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.maxTempF} F`);
-    console.log(`Pixabay image is ${picture.pixabayImage}.`);
+    const allData = await updateUI('http://localhost:3030/all');
   };
   
   travelCard.addEventListener('click', handleSubmit);

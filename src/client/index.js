@@ -1,6 +1,6 @@
 import {
     //main function from client.js
-    init
+    handleSubmit
 } from './js/client'
   
 import './styles/style.scss'
@@ -12,5 +12,5 @@ window.addEventListener('DOMContentLoaded', init);
   
 export {
     //main function from client.js
-    init
+    handleSubmit
 }

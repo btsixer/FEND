@@ -1,7 +1,3 @@
-function init() {
-    console.log('Initializing.. begin gathering trip details.');
-}
-
 const getData = async (url) => {
   const response = await fetch(url);
   try {
@@ -34,18 +30,21 @@ const postData = async ( url='', data={})=>{
   
 const updateUI = async (url) => {
     console.log('UpdateUI function starting');
+    const city = document.getElementById('input-destination-city').value;
+    const cityCap = city[0].toUpperCase() + city.substring(1)
+    const state = document.getElementById('input-destination-state').value;
+    const departureDate = document.getElementById('input-date').value;
+    const returnDate = document.getElementById('input-return-date').value;
     const response = await fetch(url);
     try {
       const data = await response.json();
-      // document.getElementById("results-image").src = data.img;
-      // document.getElementById("result-destination").innerHTML = `Trip to: ${data.location}`
-      // document.getElementById("result-departure").innerHTML = `Departure: ${data.startDate}`
-      // document.getElementById("result-return").innerHTML = `Return: ${data.endDate}`
-      // document.getElementById("result-duration").innerHTML = `Duration: ${data.duration} days`
-      // document.getElementById("trip-start").innerHTML = `Your trip is ${data.timeTillTravel} days from now`
-      // document.getElementById("result-temp").innerHTML = `${data.temp}°F`
-      // document.getElementById("result-description").innerHTML = `${data.description}`
-      document.getElementById('allData').innerHTML = `Hello, your trip details are below. \n You would like to travel to: ${city.toUpperCase()}, ${state.toUpperCase()}`;
+      console.log(data);
+      document.getElementById('results-city-state').innerHTML = `Hello, your trip details are below. \n You would like to travel to: ${cityCap}, ${state.toUpperCase()}`;
+      document.getElementById('my-trip-image').src = `${data.pixabayImage}`;
+      document.getElementById("result-departure").innerHTML = `Your departure date: ${departureDate}`
+      document.getElementById("result-return").innerHTML = `Your return date: ${returnDate}`
+      document.getElementById("forecast-high").innerHTML = `The forecast high temperature in ${cityCap}, ${state.toUpperCase()} today is: ${data.maxTempF}&#176;F`
+      document.getElementById("forecast-low").innerHTML = `The forecast low temperature ${cityCap}, ${state.toUpperCase()} today is: ${data.minTempF}&#176;F`
     } catch (error) {
       console.log("error", error);
     }
@@ -84,25 +83,26 @@ const updateUI = async (url) => {
       placenameState: state
     };
     const coord = await postData('http://localhost:3030/geoNames', placenameData);
-    console.log(`The latitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.lat}.`);
-    console.log(`The longitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.long}.`);
-
+    // console.log(`The latitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.lat}.`);
+    // console.log(`The longitude of ${city.toUpperCase()}, ${state.toUpperCase()} is:  ${coord.long}.`);
     const fcst = await postData('http://localhost:3030/weatherBit', coord);
-    console.log(`The forecast low temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.minTempF} F`);
-    console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.maxTempF} F`);
-
+    // console.log(`The forecast low temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.minTempF} F`);
+    // console.log(`The forecast high temperature for ${city.toUpperCase()}, ${state.toUpperCase()} today is: ${fcst.maxTempF} F`);
     const picture = await postData('http://localhost:3030/pixabay', placenameData);
-    console.log(`Pixabay image is ${picture.pixabayImage}.`);
-
-    await updateUI('http://localhost:3030/all');
+    // console.log(`Pixabay image is ${picture.pixabayImage}.`);
+    const allData = await updateUI('http://localhost:3030/all');
   };
   
-  travelCard.addEventListener('click', handleSubmit);
+  // travelCard.addEventListener('click', handleSubmit);
+
+  if(travelCard != null){
+    travelCard.addEventListener('click', handleSubmit);
+  }
   
   // travelCard.style.display = 'none';
   
   export {
     //main function from client.js
-    init
+    handleSubmit
   }
   

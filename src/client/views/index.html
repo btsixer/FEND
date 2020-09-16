@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
 <!-- Load favicon (for this project, null) -->
 <!-- <link rel="stylesheet" href="style.css"> -->
+<link rel="shortcut icon" href="#">
 </head>
  <body>
 
@@ -33,12 +34,32 @@
     </div>
   </section>
 
-  <div id="allData">
-  </div>
+  <!-- <section class="all-data">
+    <p>hi</p>
+  </section> -->
+
+  <section id="alldata" class="alldata">
+    <div id="results-city-state">
+      <p></p>
+    </div>
+    <div id="results-image" class="results-image">
+      <img id="my-trip-image" src="">
+    </div>
+    <div id="results-dates" class="results-date">
+      <p id="result-departure"></p>
+      <p id="result-return"></p>
+    </div>
+    <div id="results-fcstMaxTempF" class="results-fcstMaxTempF">
+      <p id="forecast-high"></p>
+    </div>
+    <div id="results-fcstMinTempF" class="fcstMinTempF">
+      <p id="forecast-low"></p>
+    </div>
+  </section>
 
 <!-- <script src="app.js" type="text/javascript"></script> -->
 
-<!-- <script>
+<script>
  // Check that service workers are supported
  if ('serviceWorker' in navigator) {
      // Use the window load event to keep the page load performant
@@ -46,7 +67,7 @@
          navigator.serviceWorker.register('/service-worker.js');
      });
  }
-</script> -->
+</script>
 
 </body>
 </html>

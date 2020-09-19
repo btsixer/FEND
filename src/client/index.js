@@ -1,16 +1,19 @@
 import {
     //main function from client.js
-    init
+    handleSubmit
 } from './js/client'
   
 import './styles/style.scss'
   
   
-// Call init on DOMContentLoaded event.
-window.addEventListener('DOMContentLoaded', init);
+// Call travelCard event listener after DOMContentLoaded event.
+window.addEventListener('DOMContentLoaded', _ => {
+    const travelCard = document.getElementById('input-submit');
+    travelCard.addEventListener('click', handleSubmit);
+});
   
   
 export {
     //main function from client.js
-    init
+    handleSubmit
 }
